@@ -1,0 +1,1496 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FAREWELL DAY</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: transparent;
+      font-family: Arial, sans-serif;
+    }
+
+    .video-bg {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .page {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease;
+    }
+
+    .page.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .hero {
+      margin-top: -20px;
+      width: min(90vw, 780px);
+    }
+
+    .hero h1 {
+      margin: 6px 0 12px;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 12px rgba(255,255,255,0.8), 0 0 24px rgba(255,255,255,0.45);
+    }
+
+    .sticker {
+      display: inline-block;
+      margin-bottom: 4px;
+      padding: 6px;
+      border: 3px solid #000000;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      box-shadow: 0 0 12px rgba(255,255,255,0.35);
+    }
+
+    .sticker img {
+      display: block;
+      width: 120px;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      justify-items: center;
+      margin-top: 20px;
+    }
+
+    .time-block {
+      width: 100%;
+      max-width: 150px;
+      padding: 16px 10px 12px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .time-block span {
+      display: block;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+      text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5);
+    }
+
+    .time-block small {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.95);
+      text-shadow: 0 0 8px rgba(255,255,255,0.7);
+    }
+
+    .note {
+      margin-top: 18px;
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #000000;
+      color: #ffffff;
+      font-size: 1rem;
+      font-family: Arial, sans-serif;
+      text-shadow: 0 0 8px rgba(255,255,255,0.5);
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+      cursor: pointer;
+      border: none;
+    }
+
+    .gift-page {
+      background: radial-gradient(circle at top, rgba(255,255,255,0.25), rgba(0,0,0,0.4));
+    }
+
+    .gift-page .content {
+      width: min(85vw, 820px);
+      min-height: min(70vh, 560px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 0;
+      position: relative;
+    }
+
+    .photo-page {
+      background: linear-gradient(180deg, rgba(0,0,0,0.5), rgba(0,0,0,0.7));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+    .photo-page .content {
+      position: relative;
+      z-index: 2;
+    }
+    .flower-explosion {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: visible;
+      z-index: 5;
+    }
+    .loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: opacity 0.3s ease;
+    }
+    .loading-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loading-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 30px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 0 40px rgba(255,255,255,0.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .spinner {
+      width: 72px;
+      height: 72px;
+      border: 8px solid rgba(255,255,255,0.2);
+      border-top-color: #ffd6ea;
+      border-radius: 50%;
+      margin-bottom: 16px;
+      animation: spin 1s linear infinite;
+    }
+    .loading-text {
+      color: #ffd6ea;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(255,214,234,0.85);
+    }
+    .game-page .content {
+      width: min(85vw, 820px);
+      min-height: min(70vh, 560px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: #ffd6ea;
+      text-align: center;
+    }
+    .game-page h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin: 0;
+    }
+    .game-page p {
+      max-width: 620px;
+      margin: 0;
+      color: rgba(255,255,255,0.85);
+    }
+    .game-card {
+      width: min(88vw, 620px);
+      padding: 28px 24px;
+      border-radius: 26px;
+      background: rgba(10, 10, 25, 0.88);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      text-align: center;
+    }
+    .game-card h1 {
+      margin-bottom: 12px;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      color: #ffd6ea;
+    }
+    .message-card {
+      width: min(90vw, 620px);
+      padding: 28px 24px;
+      border-radius: 26px;
+      background: rgba(10, 10, 25, 0.88);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      text-align: center;
+      color: #ffd6ea;
+    }
+    .message-card h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      color: #ffd6ea;
+    }
+    .message-card p {
+      margin: 0 0 16px;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.5;
+    }
+    .message-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
+    }
+    .message-input {
+      width: 100%;
+      min-height: 160px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      resize: vertical;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    .message-input:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.35);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+    }
+    .message-submit {
+      align-self: flex-start;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #ff78d9, #ff3dbd);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(255, 99, 179, 0.35);
+    }
+    .message-status {
+      min-height: 24px;
+      margin-top: 4px;
+      color: #ffd6ea;
+      font-size: 0.95rem;
+    }
+    .final-page .content {
+      width: min(90vw, 760px);
+    }
+    .final-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 28px 24px;
+    }
+    .falling-flowers {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .falling-flower {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: radial-gradient(circle at 50% 50%, #ff97d5 0%, #ff4aa1 60%, #d5008f 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(255,118,188,0.5);
+      opacity: 0;
+      transform: translateY(-40px) rotate(0deg);
+      animation: flowerFall 2.8s ease-out forwards;
+    }
+    @keyframes flowerFall {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px) rotate(0deg) scale(0.5);
+      }
+      25% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(260px) rotate(360deg) scale(1);
+      }
+    }
+    .heart-title {
+      width: min(82vw, 320px);
+      height: auto;
+      display: block;
+    }
+    .final-sad-gif {
+      width: min(42vw, 170px);
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 12px 26px rgba(0,0,0,0.35);
+    }
+    .final-message {
+      color: #fff;
+      font-size: 1rem;
+      line-height: 1.6;
+      text-align: center;
+      max-width: 560px;
+    }
+    .puzzle-question {
+      margin: 18px 0 20px;
+      font-size: 1.1rem;
+      color: #ffffff;
+      line-height: 1.5;
+      min-height: 56px;
+    }
+    .puzzle-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+      position: relative;
+      min-height: 260px;
+    }
+    .puzzle-option {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      color: #ffffff;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, left 0.24s ease, top 0.24s ease, width 0.24s ease, height 0.24s ease;
+      font-weight: 600;
+      min-height: 56px;
+      min-width: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .puzzle-option.ga-option {
+      z-index: 2;
+      background: rgba(255,255,255,0.14);
+      border-color: rgba(255,255,255,0.28);
+      box-shadow: 0 0 18px rgba(255,255,255,0.12);
+    }
+    .puzzle-option:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.16);
+      border-color: rgba(255,255,255,0.28);
+    }
+    .puzzle-option.correct {
+      background: rgba(40, 221, 165, 0.18);
+      border-color: rgba(40, 221, 165, 0.5);
+    }
+    .puzzle-option.wrong {
+      background: rgba(255, 50, 94, 0.18);
+      border-color: rgba(255, 50, 94, 0.5);
+    }
+    .puzzle-feedback {
+      font-size: 1rem;
+      min-height: 34px;
+      color: #ffd6ea;
+      margin-bottom: 12px;
+    }
+    .retry-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 22px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #ff78d9, #ff3dbd);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(255, 99, 179, 0.35);
+    }
+    .retry-btn.hidden {
+      display: none;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .flower-bloom {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle at 50% 50%, #ff78d9 0%, #ff3dbd 45%, #8900a8 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 24px rgba(255, 92, 173, 0.85), 0 0 36px rgba(255, 0, 164, 0.45);
+      opacity: 0;
+      transform: scale(0);
+      animation: flowerBlast 1.8s ease-out forwards;
+    }
+    .flower-bloom::before,
+    .flower-bloom::after {
+      content: '';
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: inherit;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      filter: blur(0.5px);
+    }
+    .flower-bloom::before {
+      transform: translate(-50%, -50%) rotate(45deg) translate(24px, -24px);
+    }
+    .flower-bloom::after {
+      transform: translate(-50%, -50%) rotate(-45deg) translate(24px, -24px);
+    }
+    @keyframes flowerBlast {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0);
+      }
+      20% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1.1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(1.2);
+      }
+    }
+
+    .photo-image {
+      width: min(85vw, 820px);
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      animation: popIn 0.6s ease forwards;
+    }
+
+    .photo-gallery {
+      max-height: 78vh;
+      overflow-y: auto;
+      padding-right: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .photo-page .content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .page-message {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+      color: #ffd6ea;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(255,182,193,0.85), 0 0 20px rgba(255,105,180,0.55), 0 0 40px rgba(255,105,180,0.2);
+      z-index: 2;
+      pointer-events: auto;
+      margin-right: 0;
+      align-self: center;
+      transform: translateY(6px);
+      text-align: center;
+      max-width: min(92vw, 460px);
+    }
+
+    @media (max-width: 800px) {
+      .photo-page .content {
+        flex-direction: column;
+        align-items: center;
+      }
+      .page-message {
+        margin-right: 0;
+        transform: none;
+        text-align: center;
+        max-width: 90vw;
+      }
+    }
+    .sub-message {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(0.78rem, 1.1vw, 0.92rem);
+      color: #ffffff;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 8px 20px rgba(255,105,180,0.06) inset, 0 6px 18px rgba(0,0,0,0.45);
+      width: 100%;
+      max-width: 460px;
+      max-height: 220px;
+      box-sizing: border-box;
+      line-height: 1.35;
+      text-shadow: none;
+      display: inline-block;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      overflow-y: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .sub-message::-webkit-scrollbar {
+      display: none;
+    }
+
+    .game-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      padding: 14px 24px;
+      border-radius: 999px;
+      border: none;
+      background: #7a7a7a;
+      color: #ffffff;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(255,255,255,0.16);
+      text-shadow: 0 0 10px rgba(255,255,255,0.5);
+      transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+      pointer-events: auto;
+      min-width: 220px;
+    }
+    .game-btn:hover {
+      transform: translateY(-2px);
+      background: #8d8d8d;
+      box-shadow: 0 0 32px rgba(255,255,255,0.24);
+    }
+    .game-btn:focus {
+      outline: none;
+      box-shadow: 0 0 40px rgba(255,255,255,0.35);
+    }
+
+    .photo-frame {
+      border: 10px solid #ffffff;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+    }
+
+    /* Webkit scrollbar styling for vertical scrollbar at the side */
+    .photo-gallery::-webkit-scrollbar {
+      width: 12px;
+    }
+    .photo-gallery::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.04);
+      border-radius: 8px;
+    }
+    .photo-gallery::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.25);
+      border-radius: 8px;
+    }
+
+    .photo-back {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #ffffff22;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.18);
+      cursor: pointer;
+    }
+
+    .photo-error {
+      color: #ffd3d3;
+      background: rgba(0,0,0,0.45);
+      padding: 10px 14px;
+      border-radius: 10px;
+      display: none;
+      margin-top: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    .photo-error.visible {
+      display: inline-block;
+    }
+
+    .gift-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+
+    .gift-wrapper {
+      position: relative;
+      width: min(80vw, 380px);
+      height: min(55vh, 400px);
+      max-height: 420px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .gift-image {
+      position: absolute;
+      z-index: 10;
+      width: min(68vw, 260px);
+      max-width: 260px;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      animation: popIn 0.8s ease forwards;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .tenor-gif {
+      width: 120px;
+      height: auto;
+      display: none;
+      border-radius: 8px;
+      border: 2px solid #000;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+      animation: popIn 0.5s ease forwards;
+      filter: drop-shadow(0 0 6px rgba(0,0,0,0.8));
+      pointer-events: none;
+    }
+
+    .gift-text {
+      color: white;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      pointer-events: none;
+      white-space: normal;
+      text-align: center;
+      max-width: 95%;
+      line-height: 1.3;
+      padding: 4px 8px;
+      border-radius: 10px;
+      margin: 0 auto 16px;
+      text-shadow:
+        -2px -2px 0 #000,
+        2px -2px 0 #000,
+        -2px 2px 0 #000,
+        2px 2px 0 #000;
+    }
+
+    .tenor-gif {
+      width: 120px;
+      height: auto;
+      display: none;
+      margin: 0 auto 8px;
+      border-radius: 8px;
+      border: 2px solid #000;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+      animation: popIn 0.5s ease forwards;
+      filter: drop-shadow(0 0 6px rgba(0,0,0,0.8));
+      pointer-events: none;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: translateY(-30px) scale(0.9);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .countdown {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .gift-image {
+        width: min(82vw, 260px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <video class="video-bg" autoplay muted loop playsinline>
+    <source src="ungu.mp4" type="video/mp4" />
+  </video>
+
+  <div class="page" id="page1">
+    <div class="content">
+      <div class="hero">
+        <div class="sticker">
+          <img src="nunggu.gif" alt="Stiker menunggu" />
+        </div>
+        <h1>FAREWELL DAY</h1>
+        <div class="countdown" id="countdown">
+          <div class="time-block">
+            <span id="days">99</span>
+            <small>Hari</small>
+          </div>
+          <div class="time-block">
+            <span id="hours">99</span>
+            <small>Jam</small>
+          </div>
+          <div class="time-block">
+            <span id="minutes">99</span>
+            <small>Menit</small>
+          </div>
+          <div class="time-block">
+            <span id="seconds">99</span>
+            <small>Detik</small>
+          </div>
+        </div>
+        <button class="note" id="noteBtn">tunggu timer nya😆⏳</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page gift-page hidden" id="page2">
+    <div class="content">
+      <div class="gift-header">
+        <img id="tenorGif" class="tenor-gif" src="tenor.gif" alt="tenor" />
+        <div class="gift-text">buka kado nya</div>
+      </div>
+      <div class="gift-wrapper">
+        <img class="gift-image" id="giftImage" src="kadoy.png" alt="Kado" />
+      </div>
+    </div>
+  </div>
+
+  <div class="page photo-page hidden" id="page3">
+    <div class="flower-explosion" id="flowerExplosion"></div>
+    <div class="loading-overlay hidden" id="loadingOverlay">
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <div class="loading-text">loading game...</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="page-message"><span id="pageTitle">Pesan terakhir💌 (M.Wahyu Al -Zakin)</span>
+        <div class="sub-message" id="subMessage">(Aliyatanishalova)🫶<br>
+Lovaaa,<br>
+"Aku minta maaf kalo banyak salah sama mu🙏dan semoga kita menjalin hubungan yang baik dan ga ikut kata' orang yang membuat hubungan kita hancur, dan kita juga harus fokus di pesantren, jangan karna kita ada hubungan kita ga fokus sama pesantren, dan semoga ko ga berubah ya tetap baik dan perhatian, dan makasih untuk semuanya yaaa, makasih udh datang dan bikin senang hari hari ku, aku masih ingat waktu ko temani aku running tapi ko malah bobo,🤦‍♂️.... tapi aku senang kok, ada ko yg temani aku running meski terpisah jarak dan cuma VC, dan aku juga senang karna ko udh mau mabar sama aku di Roblox( mendaki gunung)dan makasi ud ingatin aku segala hal, dan udh menjadi pendengar yang baik, dan aku udh ngerasa banyak hal' seru yg aku lewati sama ko dan aku ngerasa nyaman sama ko.......<br>
+Maaf kalo sebelum nya aku udh ungkapin sama ko,(3-7-2026) ....... tapi agak kurang bagus untuk ungkapin, tapi pada hari ini (10-7-2026) ini adalah hari resmi....<br>
+"Aku juga ga tau ko mau apa ga sama aku"<br><br>
+Semoga cinta kita tulus💕<br>
+Karena cuma ko yg mau aku dekatin karena aku sebelum nya pun jarang dekatin cewe..... jadi aku berharap ko...<br>
+"Tapi aku ga maksa".....<br><br>
+Dan aku juga minta maaf kalo ada kata' ku yg buat ko ga nyaman dan masih banyak lagi sebenar nya yang mau aku ceritain..........<br><br>
+"Aku sayang ko lebih dari yang ko kiraa"<br>
+"Ko boleh bosan asal jangan pergi(asing)"<br>
+"Ko boleh ngambeng asal jangan sampe ngediamin(Read)<br><br>
+"Ko boleh sibuk, asal tetap berkabar"<br><br>
+Dan aku usahain yang aku bilng sama mu akan aku terapin jugaaa.......<br><br>
+"Okey cukup sekian yg aku bilang"<br><br>
+By. Aliyatanishalova🫶<br>
+My Princess👸<br>
+Adek lova🤏</div>
+        <button class="game-btn" id="gameBtn">🎮main game yukk🕹️</button>
+      </div>
+      <div class="photo-gallery" id="photoGallery">
+        <img class="photo-image photo-frame" src="4.jpeg" alt="Foto 4" />
+        <img class="photo-image photo-frame" src="5.jpeg" alt="Foto 5" />
+        <img class="photo-image photo-frame" src="6.jpeg" alt="Foto 6" />
+        <img class="photo-image photo-frame" src="7.jpeg" alt="Foto 7" />
+        <img class="photo-image photo-frame" src="8.jpeg" alt="Foto 8" />
+        <img class="photo-image photo-frame" src="9.jpeg" alt="Foto 9" />
+        <img class="photo-image photo-frame" src="10.jpeg" alt="Foto 10" />
+        <img class="photo-image photo-frame" src="3.jpeg" alt="Foto 3" />
+        <div id="photoError" class="photo-error">Beberapa gambar tidak ditemukan. Letakkan file 3.jpeg atau file yang digunakan di folder project.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page game-page hidden" id="page4">
+    <div class="content">
+      <div class="game-card">
+        <h1>Mini Puzzle</h1>
+        <p>Jawab pertanyaan di bawah ini dengan benar.</p>
+        <div class="puzzle-question" id="puzzleQuestion">Loading...</div>
+        <div class="puzzle-options" id="puzzleOptions"></div>
+        <div class="puzzle-feedback" id="puzzleFeedback"></div>
+        <button class="retry-btn hidden" id="retryBtn">Coba Lagi</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page game-page hidden" id="page5">
+    <div class="content">
+      <div class="message-card">
+        <img src="cat.gif" alt="cat" style="width:110px; height:auto; margin-bottom:12px; border-radius:12px;" />
+        <h1>KASI PESAN UNTUKKU</h1>
+        <p>nanti aku baca pesan kamu sayangg😘</p>
+        <form class="message-form" id="messageForm">
+          <textarea class="message-input" id="messageInput" placeholder="Tulis pesannya di sini..."></textarea>
+          <button class="message-submit" type="submit">Kirim Pesan</button>
+          <div class="message-status" id="messageStatus">Belum ada pesan yang dikirim.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="page game-page hidden final-page" id="page6">
+    <div class="content">
+      <div class="message-card final-card">
+        <div class="falling-flowers" id="fallingFlowers"></div>
+        <svg class="heart-title" viewBox="0 0 320 180" role="img" aria-label="I Love You">
+          <path id="heartPath" d="M160 150 C120 110, 70 90, 60 60 C45 20, 95 10, 125 35 C140 48, 150 64, 160 78 C170 64, 180 48, 195 35 C225 10, 275 20, 260 60 C250 90, 200 110, 160 150 Z" fill="none" stroke="none"></path>
+          <text fill="#ffd6ea" font-family="Playfair Display, serif" font-size="34" font-weight="700" letter-spacing="3">
+            <textPath href="#heartPath" startOffset="0%" side="left">I LOVE YOU I LOVE YOU I LOVE YOU I LOVE YOU
+            </textPath>
+          </text>
+        </svg>
+        <img src="sad.gif" alt="sad" class="final-sad-gif" />
+        <div class="final-message">Pesan kamu sudah sampai, sayang. Aku bakal baca nanti ya 💖</div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="bgMusic" src="lagu.mp3" preload="auto" loop></audio>
+  <audio id="jamAudio" src="jam.mp3" preload="auto" loop></audio>
+  <audio id="boomAudio" src="boom.mp3" preload="auto"></audio>
+
+  <script>
+    const targetDate = new Date('2026-12-31T23:59:59').getTime();
+    const noteBtn = document.getElementById('noteBtn');
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+    const giftImage = document.getElementById('giftImage');
+    const giftText = document.querySelector('.gift-text');
+    const giftArea = page2.querySelector('.gift-wrapper');
+    const bgMusic = document.getElementById('bgMusic');
+    const page3 = document.getElementById('page3');
+    const page4 = document.getElementById('page4');
+    const page5 = document.getElementById('page5');
+    const page6 = document.getElementById('page6');
+    const flowerExplosion = document.getElementById('flowerExplosion');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const gameBtn = document.getElementById('gameBtn');
+    const puzzleQuestion = document.getElementById('puzzleQuestion');
+    const puzzleOptions = document.getElementById('puzzleOptions');
+    const puzzleFeedback = document.getElementById('puzzleFeedback');
+    const retryBtn = document.getElementById('retryBtn');
+    const messageForm = document.getElementById('messageForm');
+    const messageInput = document.getElementById('messageInput');
+    const messageStatus = document.getElementById('messageStatus');
+    const photoImage = document.getElementById('photoImage');
+    const photoGallery = document.getElementById('photoGallery');
+    let clicked = false;
+    let specialSeconds = 10;
+    let musicStarted = false;
+    let autoScrollInterval = null;
+    let photoAutoScrollInterval = null;
+    let stopCountdown = false;
+    let flowerInterval = null;
+
+    function setTimeValues(days, hours, minutes, seconds) {
+      document.getElementById('days').textContent = String(days).padStart(2, '0');
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+    }
+
+    function playPageMusic() {
+      if (!bgMusic || musicStarted) return;
+      musicStarted = true;
+      bgMusic.currentTime = 0;
+      bgMusic.volume = 0.6;
+      bgMusic.play().catch(() => {});
+    }
+
+    const jamAudio = document.getElementById('jamAudio');
+    function playJam() {
+      if (!jamAudio) return;
+      try { jamAudio.currentTime = 0; jamAudio.volume = 0.6; jamAudio.play(); } catch(e) {}
+    }
+    function stopJam() {
+      if (!jamAudio) return;
+      try { jamAudio.pause(); jamAudio.currentTime = 0; } catch(e) {}
+    }
+
+    function stopPageMusic() {
+      if (!bgMusic) return;
+      bgMusic.pause();
+      musicStarted = false;
+    }
+
+    function showGiftPage() {
+      if (page2.classList.contains('hidden')) {
+        if (page6) page6.classList.add('hidden');
+        // stop page-1 music
+        stopJam();
+        // reset gift state
+        if (giftImage) { giftImage.src = 'kadoy.png'; }
+        giftClickCount = 0;
+        if (giftText) giftText.textContent = 'buka kado nya';
+        if (tenorGif) {
+          tenorGif.style.display = 'block';
+          tenorGif.style.opacity = '1';
+        }
+        centerGift();
+        page1.classList.add('hidden');
+        page2.classList.remove('hidden');
+        playPageMusic();
+      }
+    }
+
+    function centerGift() {
+      if (!giftImage || !giftArea) return;
+      giftImage.style.position = 'absolute';
+      giftImage.style.zIndex = '10';
+      giftImage.style.pointerEvents = 'auto';
+      giftImage.style.transition = 'left 0.36s ease, top 0.36s ease, transform 0.26s ease';
+      const aw = giftArea.clientWidth;
+      const ah = giftArea.clientHeight;
+      const iw = giftImage.offsetWidth;
+      const ih = giftImage.offsetHeight;
+      const left = Math.max(0, Math.floor((aw - iw) / 2));
+      const top = Math.max(0, Math.floor((ah - ih) / 2));
+      giftImage.style.left = left + 'px';
+      giftImage.style.top = top + 'px';
+    }
+
+    function moveGiftRandom() {
+      if (!giftImage || !giftArea) return;
+      giftImage.style.position = 'absolute';
+      giftImage.style.zIndex = '10';
+      giftImage.style.pointerEvents = 'auto';
+      giftImage.style.transition = 'left 0.36s ease, top 0.36s ease, transform 0.26s ease';
+      const aw = giftArea.clientWidth;
+      const ah = giftArea.clientHeight;
+      const iw = giftImage.offsetWidth;
+      const ih = giftImage.offsetHeight;
+      const maxLeft = Math.max(0, aw - iw);
+      const maxTop = Math.max(0, ah - ih);
+      const left = Math.floor(Math.random() * (maxLeft + 1));
+      const top = Math.floor(Math.random() * (maxTop + 1));
+      giftImage.style.left = left + 'px';
+      giftImage.style.top = top + 'px';
+    }
+
+    function triggerFlowerExplosion() {
+      if (!flowerExplosion) return;
+      flowerExplosion.innerHTML = '';
+      const count = 16;
+      for (let i = 0; i < count; i++) {
+        const flower = document.createElement('div');
+        flower.className = 'flower-bloom';
+        const size = 40 + Math.floor(Math.random() * 50);
+        flower.style.width = size + 'px';
+        flower.style.height = size + 'px';
+        flower.style.left = 'calc(50% - ' + size / 2 + 'px)';
+        flower.style.top = 'calc(50% - ' + size / 2 + 'px)';
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 180 + Math.random() * 220;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        flower.style.setProperty('--tx', tx + 'px');
+        flower.style.setProperty('--ty', ty + 'px');
+        flower.style.animationDelay = (Math.random() * 0.25) + 's';
+        flowerExplosion.appendChild(flower);
+        flower.addEventListener('animationend', () => {
+          flower.remove();
+        });
+      }
+    }
+
+    function showPhotoPage() {
+      if (page3.classList.contains('hidden')) {
+        clicked = false;
+        if (page6) page6.classList.add('hidden');
+        if (loadingOverlay) loadingOverlay.classList.add('hidden');
+        // stop page-1 music
+        stopJam();
+        page1.classList.add('hidden');
+        page2.classList.add('hidden');
+        page3.classList.remove('hidden');
+        page4.classList.add('hidden');
+        page5.classList.add('hidden');
+        playPageMusic();
+        triggerFlowerExplosion();
+        startAutoScroll();
+        startPhotoAutoScroll();
+      }
+    }
+
+    function startAutoScroll() {
+      const subMessage = document.getElementById('subMessage');
+      if (!subMessage) return;
+      clearInterval(autoScrollInterval);
+      subMessage.scrollTop = 0;
+      autoScrollInterval = setInterval(() => {
+        if (subMessage.scrollTop + subMessage.clientHeight >= subMessage.scrollHeight) {
+          clearInterval(autoScrollInterval);
+          return;
+        }
+        subMessage.scrollTop = Math.min(subMessage.scrollTop + 1, subMessage.scrollHeight - subMessage.clientHeight);
+      }, 70);
+    }
+
+    function startPhotoAutoScroll() {
+      if (!photoGallery) return;
+      clearInterval(photoAutoScrollInterval);
+      photoGallery.scrollTop = 0;
+      photoAutoScrollInterval = setInterval(() => {
+        if (photoGallery.scrollTop + photoGallery.clientHeight >= photoGallery.scrollHeight) {
+          clearInterval(photoAutoScrollInterval);
+          return;
+        }
+        photoGallery.scrollTop = Math.min(photoGallery.scrollTop + 2, photoGallery.scrollHeight - photoGallery.clientHeight);
+      }, 20);
+    }
+
+    function showGamePage() {
+      if (page4.classList.contains('hidden')) {
+        if (page6) page6.classList.add('hidden');
+        if (loadingOverlay) loadingOverlay.classList.add('hidden');
+        stopJam();
+        page1.classList.add('hidden');
+        page2.classList.add('hidden');
+        page3.classList.add('hidden');
+        page4.classList.remove('hidden');
+        page5.classList.add('hidden');
+        playPageMusic();
+        setupPuzzle();
+      }
+    }
+
+    function showMessagePage() {
+      if (page5.classList.contains('hidden')) {
+        if (page6) page6.classList.add('hidden');
+        if (loadingOverlay) loadingOverlay.classList.add('hidden');
+        stopJam();
+        page1.classList.add('hidden');
+        page2.classList.add('hidden');
+        page3.classList.add('hidden');
+        page4.classList.add('hidden');
+        page5.classList.remove('hidden');
+        playPageMusic();
+        if (messageInput) messageInput.value = '';
+        if (messageStatus) messageStatus.textContent = 'Belum ada pesan yang dikirim.';
+      }
+    }
+
+    function showFinalPage() {
+      if (page6) {
+        stopCountdown = true;
+        page6.classList.remove('hidden');
+        page1.classList.add('hidden');
+        page2.classList.add('hidden');
+        page3.classList.add('hidden');
+        page4.classList.add('hidden');
+        page5.classList.add('hidden');
+        startFallingFlowers();
+      }
+    }
+
+    function setupPuzzle() {
+      if (puzzleQuestion) {
+        puzzleQuestion.textContent = 'Kamu sayang aku ga?';
+      }
+      if (puzzleFeedback) {
+        puzzleFeedback.textContent = '';
+      }
+      if (retryBtn) {
+        retryBtn.classList.add('hidden');
+      }
+      if (!puzzleOptions) return;
+      puzzleOptions.innerHTML = '';
+      const options = ['iya', 'iya', 'iya', 'ga'];
+      options.sort(() => 0.5 - Math.random());
+      options.forEach((choice) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'puzzle-option';
+        btn.textContent = choice;
+        if (choice === 'ga') {
+          btn.classList.add('ga-option');
+          btn.dataset.converted = 'false';
+          btn.onclick = () => moveGaButton(btn);
+        } else {
+          btn.onclick = () => handlePuzzleChoice(btn, true);
+        }
+        puzzleOptions.appendChild(btn);
+      });
+    }
+
+    let gaClickCount = 0;
+
+    function moveGaButton(button) {
+      if (!puzzleOptions || !button) return;
+      gaClickCount += 1;
+      if (gaClickCount >= 10) {
+        button.textContent = 'iya';
+        button.dataset.converted = 'true';
+        button.classList.remove('ga-option');
+        button.classList.add('correct');
+        button.onclick = () => showMessagePage();
+        if (puzzleFeedback) {
+          puzzleFeedback.textContent = 'yeyy kamu sayank akuu😍';
+        }
+        return;
+      }
+      if (puzzleFeedback) {
+        puzzleFeedback.textContent = `Klik ga lagi ${10 - gaClickCount} kali supaya jadi iya.`;
+      }
+      if (button.style.position !== 'absolute') {
+        const rect = button.getBoundingClientRect();
+        const parentRect = puzzleOptions.getBoundingClientRect();
+        button.style.position = 'absolute';
+        button.style.left = (rect.left - parentRect.left) + 'px';
+        button.style.top = (rect.top - parentRect.top) + 'px';
+        button.style.width = rect.width + 'px';
+        button.style.height = rect.height + 'px';
+      }
+      const currentWidth = button.offsetWidth;
+      const currentHeight = button.offsetHeight;
+      const shrink = 10;
+      const newWidth = Math.max(120, currentWidth - shrink);
+      const newHeight = Math.max(50, currentHeight - 4);
+      button.style.width = newWidth + 'px';
+      button.style.height = newHeight + 'px';
+      button.style.fontSize = '0.96rem';
+      const bounds = puzzleOptions.getBoundingClientRect();
+      const maxLeft = Math.max(0, bounds.width - newWidth);
+      const maxTop = Math.max(0, bounds.height - newHeight);
+      const left = Math.floor(Math.random() * (maxLeft + 1));
+      const top = Math.floor(Math.random() * (maxTop + 1));
+      button.style.left = left + 'px';
+      button.style.top = top + 'px';
+    }
+
+    function handlePuzzleChoice(button, isCorrect) {
+      if (!puzzleFeedback) return;
+      const allButtons = puzzleOptions ? puzzleOptions.querySelectorAll('button') : [];
+      if (isCorrect) {
+        if (button.textContent.trim().toLowerCase() === 'iya') {
+          showMessagePage();
+          return;
+        }
+        button.classList.add('correct');
+        puzzleFeedback.textContent = 'Yeay! Jawabanmu benar 🎉';
+        allButtons.forEach((btn) => {
+          btn.disabled = true;
+          btn.style.cursor = 'default';
+        });
+      } else {
+        button.classList.add('wrong');
+        puzzleFeedback.textContent = 'Coba lagi, pilih jawaban yang berbeda.';
+        button.disabled = true;
+        if (retryBtn) {
+          retryBtn.classList.remove('hidden');
+        }
+      }
+    }
+
+    if (retryBtn) {
+      retryBtn.addEventListener('click', () => {
+        setupPuzzle();
+      });
+    }
+
+    if (messageForm) {
+      messageForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!messageInput || !messageStatus) return;
+        const message = messageInput.value.trim();
+        if (!message) {
+          messageStatus.textContent = 'Pesan tidak boleh kosong.';
+          return;
+        }
+        messageStatus.textContent = 'Mengirim pesan...';
+        messageStatus.style.color = '#ffd6ea';
+        try {
+          const result = await saveMessage(message);
+          if (result.success) {
+            messageInput.value = '';
+            messageStatus.textContent = 'Pesan berhasil terkirim.';
+            messageStatus.style.color = '#8effc1';
+            showFinalPage();
+            startFallingFlowers();
+            shareToWhatsApp(message);
+          } else {
+            messageStatus.textContent = result.error || 'Gagal mengirim pesan.';
+            messageStatus.style.color = '#ffb3c0';
+          }
+        } catch (error) {
+          messageStatus.textContent = 'Gagal mengirim pesan.';
+          messageStatus.style.color = '#ffb3c0';
+        }
+      });
+    }
+
+    function updateCountdown() {
+      if (clicked) {
+        if (specialSeconds < 0) {
+          setTimeValues(0, 0, 0, 0);
+          showGiftPage();
+          return;
+        }
+        setTimeValues(0, 0, 0, specialSeconds);
+        specialSeconds -= 1;
+        return;
+      }
+
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance <= 0 || stopCountdown) {
+        if (!stopCountdown) {
+          setTimeValues(0, 0, 0, 0);
+          showGiftPage();
+        }
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      setTimeValues(days, hours, minutes, seconds);
+    }
+
+    setTimeout(() => {
+      if (!clicked) {
+        noteBtn.textContent = 'coba klik aku 😍';
+      }
+    }, 5000);
+
+    noteBtn.addEventListener('click', () => {
+      if (clicked) return;
+      clicked = true;
+      specialSeconds = 10;
+      noteBtn.textContent = 'tunggu sebentar lagi😆';
+      updateCountdown();
+    });
+
+    if (gameBtn) {
+      gameBtn.addEventListener('click', () => {
+        if (loadingOverlay) {
+          loadingOverlay.classList.remove('hidden');
+        }
+        setTimeout(() => {
+          if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+          }
+          showGamePage();
+        }, 1800);
+      });
+    }
+
+    // klik pada kado (page2): setiap klik hitung sampai 10 kemudian buka page3
+    let giftClickCount = 0;
+    const giftMaxClicks = 10;
+    const tenorGif = document.getElementById('tenorGif');
+    const boomAudio = document.getElementById('boomAudio');
+
+    async function saveMessage(message) {
+      const now = new Date().toLocaleString('id-ID');
+      const entry = `[${now}] ${message}\n---\n`;
+      const savedMessages = localStorage.getItem('savedMessages') || '';
+      localStorage.setItem('savedMessages', savedMessages + entry);
+      return { success: true };
+    }
+
+    function shareToWhatsApp(message) {
+      const phone = '6285833655848';
+      const text = 'pesan dari lova : ' + message;
+      const url = 'https://api.whatsapp.com/send?phone=' + phone + '&text=' + encodeURIComponent(text);
+      window.open(url, '_blank');
+    }
+
+    function startFallingFlowers() {
+      const container = document.getElementById('fallingFlowers');
+      if (!container) return;
+      container.innerHTML = '';
+      if (flowerInterval) {
+        clearInterval(flowerInterval);
+      }
+      const createFlower = () => {
+        const flower = document.createElement('div');
+        flower.className = 'falling-flower';
+        flower.style.left = `${Math.random() * 100}%`;
+        flower.style.animationDuration = `${2.6 + Math.random() * 1.2}s`;
+        flower.style.animationDelay = '0s';
+        const size = 12 + Math.random() * 10;
+        flower.style.width = `${size}px`;
+        flower.style.height = `${size}px`;
+        container.appendChild(flower);
+        setTimeout(() => {
+          if (flower.parentNode) {
+            flower.parentNode.removeChild(flower);
+          }
+        }, 3200);
+      };
+      for (let i = 0; i < 6; i++) {
+        setTimeout(createFlower, i * 260);
+      }
+      flowerInterval = setInterval(() => {
+        createFlower();
+      }, 400);
+    }
+
+    function resetGiftState() {
+      if (giftText) {
+        giftText.textContent = 'buka kado nya';
+        giftText.style.display = 'block';
+      }
+      if (tenorGif) {
+        tenorGif.style.display = 'none';
+      }
+    }
+
+    function handleGiftClick() {
+      if (!page2 || page2.classList.contains('hidden')) return;
+      if (boomAudio) { try { boomAudio.currentTime = 0; boomAudio.play(); } catch(e) {} }
+      giftImage.style.transform = 'scale(0.96)';
+      setTimeout(() => { giftImage.style.transform = 'scale(1)'; }, 120);
+      moveGiftRandom();
+      giftClickCount++;
+      if (giftText) {
+        if (giftClickCount === 1) {
+          giftText.textContent = 'ayoo pencet lagi😂';
+        } else if (giftClickCount === 3) {
+          giftText.textContent = 'jangan menyerah sayang🤣👍';
+        } else if (giftClickCount === 7) {
+          giftText.textContent = 'tap tap lagii sayanggg🫡';
+        } else if (giftClickCount === 10) {
+          giftText.textContent = 'yeayy akhirnyaa💖';
+        }
+        giftText.style.display = 'block';
+      }
+      if (giftClickCount === 1) {
+        if (tenorGif) {
+          tenorGif.style.display = 'block';
+          tenorGif.style.opacity = '1';
+        }
+      }
+      if (giftClickCount >= giftMaxClicks) {
+        giftClickCount = 0;
+        setTimeout(() => { showPhotoPage(); }, 380);
+      }
+    }
+
+    if (giftImage) {
+      giftImage.addEventListener('click', handleGiftClick);
+    }
+    if (page2) {
+      page2.addEventListener('click', (e) => {
+        if (!giftImage || !page2 || page2.classList.contains('hidden')) return;
+        if (e.target === giftImage) return;
+        const rect = giftImage.getBoundingClientRect();
+        const x = e.clientX;
+        const y = e.clientY;
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+          handleGiftClick();
+        }
+      });
+    }
+
+    const photoImage2 = document.getElementById('photoImage2');
+
+    // klik pada salah satu gambar di halaman foto mengembalikan ke halaman utama
+    page3.addEventListener('click', (e) => {
+      if (e.target && e.target.tagName === 'IMG') {
+        page3.classList.add('hidden');
+        page1.classList.remove('hidden');
+        stopPageMusic();
+        // resume page-1 music
+        playJam();
+        // reset gift image and counter for next time
+        if (giftImage) giftImage.src = 'kadoy.png';
+        giftClickCount = 0;
+        if (giftText) giftText.textContent = 'buka kado nya';
+        if (tenorGif) tenorGif.style.display = 'none';
+        clearInterval(autoScrollInterval);
+        clearInterval(photoAutoScrollInterval);
+      }
+    });
+
+    // error handling untuk kedua gambar
+    const errEl = document.getElementById('photoError');
+    function handleImgError(imgEl) {
+      if (errEl) errEl.classList.add('visible');
+      if (imgEl) imgEl.style.display = 'none';
+    }
+
+    if (photoImage) photoImage.onerror = () => handleImgError(photoImage);
+    if (photoImage2) photoImage2.onerror = () => handleImgError(photoImage2);
+
+    // saat menampilkan halaman foto, reset state error dan tampilkan gambar
+    const originalShowPhotoPage = showPhotoPage;
+    showPhotoPage = function() {
+      if (errEl) errEl.classList.remove('visible');
+      if (photoImage) photoImage.style.display = 'block';
+      if (photoImage2) photoImage2.style.display = 'block';
+      originalShowPhotoPage();
+      // sesuaikan lebar sub-message agar sama dengan judul
+      setTimeout(setSubWidth, 40);
+    };
+
+    // set lebar sub-message agar sama panjang dengan judul
+    function setSubWidth() {
+      const title = document.getElementById('pageTitle');
+      const sub = document.getElementById('subMessage');
+      if (!title || !sub) return;
+      const w = title.offsetWidth;
+      sub.style.width = w + 'px';
+    }
+
+    window.addEventListener('resize', () => {
+      setSubWidth();
+    });
+
+    // inisialisasi pada load
+    setSubWidth();
+    // coba mainkan jam pada halaman 1
+    setTimeout(() => { playJam(); }, 200);
+
+    bgMusic.addEventListener('ended', () => {
+      musicStarted = false;
+    });
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
